@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/ClientJoinHandling.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/shared/models/Request.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/shared/models/RoomInformations.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/game/CaroTile.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/ClientHostHandling.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/shared/models/Room.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/game/CaroFrame.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/RoomListGUI.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/server/CloseException.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/MenuGUI.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/WaitRoomGUI.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/shared/models/Person.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/Client.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/server/Server.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/server/ServerRoomHandling.java</file>
+            <file>file:/C:/Users/hieup/Documents/NetBeansProjects/chessProject-main/chessProject-main/src/chessproject/client/ClientRoomHandling.java</file>
+        </group>
+    </open-files>
+</project-private>
