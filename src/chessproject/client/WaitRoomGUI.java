@@ -268,9 +268,7 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
                         requestHandling(join);
                     }
                 } catch (IOException | ClassNotFoundException e) {    
-                } catch (ParserConfigurationException ex) {
-                    Logger.getLogger(WaitRoomGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SAXException ex) {
+                } catch (ParserConfigurationException | SAXException ex) {
                     Logger.getLogger(WaitRoomGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } 
@@ -281,13 +279,14 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
      private void requestHandling(ClientHostHandling host) throws IOException, ClassNotFoundException, ParserConfigurationException, SAXException {
         //This method will take the request from the client, check what type it is and handles it by the ClientHostHandling.
         Request request = (Request) host.receiveData();
-        System.out.println(request);
+        //System.out.println(request);
         switch(request.getRequest()){
             case Request.EXIT:
-                //If request is OUT remove name of that client and wait for a new connection.
+                //If request is EXIT remove name of that client and wait for a new connection.
                 player2Name.setText("Player 2");
                 if(game!=null){
                     game.dispose();
+                    game = null;
                 }
                 setVisible(true);
                 host.setIsOut(true);
@@ -297,6 +296,7 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
                 moveExcute(Integer.parseInt(abscissa), Integer.parseInt(ordinate));
                 break;
             case Request.YOULOST:
+                JOptionPane.showMessageDialog(this, "You lost");
                 gameOver(false);
                 break;
             
@@ -318,6 +318,7 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
                 parent.setVisible(true);
                 if(game!=null){
                     game.dispose();
+                    game = null;
                 }
                 this.dispose();
                 break;
@@ -330,6 +331,7 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
                 moveExcute(Integer.parseInt(abscissa), Integer.parseInt(ordinate));
                 break;
             case Request.YOULOST:
+                JOptionPane.showMessageDialog(this, "You lost");
                 gameOver(false);
                 break;
                 
@@ -339,7 +341,7 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
      private void startGame(boolean isTurn){
         game = new CaroFrame(this, isTurn);
         game.setVisible(true);
-        
+        this.setVisible(false);
      }
      
      public void moveCheck(int abscissa, int ordinate) throws IOException{
@@ -364,7 +366,6 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
      
      public void gameOver(boolean isWin) throws IOException{
          if(isWin){
-            JOptionPane.showMessageDialog(this, "You won");
             Request request = new Request(Request.YOULOST);
             if(join != null){
                 join.sendRequest(request);
@@ -372,12 +373,11 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
             else{
                  host.sendData(request);
             }
-         }
-         else{
-            JOptionPane.showMessageDialog(this, "You lost");
+            JOptionPane.showMessageDialog(this, "You won");
          }
          
          game.dispose();
+         this.setVisible(true);
      }
      
     //Override method of the WindowListener

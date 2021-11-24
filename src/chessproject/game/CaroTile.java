@@ -5,19 +5,8 @@
  */
 package chessproject.game;
 
-import chessproject.client.WaitRoomGUI;
-import java.awt.Color;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 
 /**
@@ -62,7 +51,7 @@ public class CaroTile extends javax.swing.JPanel {
             this.isMy = isMy;
             return false;
         }
-        return isTick;
+        return true;
     }
     
     

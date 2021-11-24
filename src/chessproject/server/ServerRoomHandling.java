@@ -42,7 +42,7 @@ public class ServerRoomHandling extends ServerHandling{
             port - the server port which player want to host
     */
     public void hostRoom(Map <Integer, Room> rooms, String data) throws ParserConfigurationException, SAXException, IOException{
-        System.out.println(data);
+        //System.out.println(data);
         host = new Room(new Person(Convertor.getValueFromXMLTag(data, "name"),
                 Convertor.getValueFromXMLTag(data, "address")), 
                 Integer.parseInt(Convertor.getValueFromXMLTag(data, "port"))); //Create a new room
@@ -72,7 +72,7 @@ public class ServerRoomHandling extends ServerHandling{
                     Convertor.getValueFromXMLTag(data, "address")));
                 System.out.println(join.getClient().getName());
                 this.sendData(join);
-                System.out.println("ok");
+                //System.out.println("ok");
             }
             else {
                 join = null;

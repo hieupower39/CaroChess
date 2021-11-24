@@ -6,7 +6,6 @@
 package chessproject.game;
 
 import chessproject.client.WaitRoomGUI;
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,11 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  *
@@ -156,20 +151,19 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
     }
     
     public void play(int abscissa, int ordinate) throws IOException{
-        tiles.get(abscissa).get(ordinate).tick(opponentTick, false);
+        tiles.get(abscissa).get(ordinate).tick(opponentTick, false);       
         isTurn = true;
         this.setVisible(true);
     }
     
     private boolean isWin(int abscissa, int ordinate){
-        final CaroTile tile =  tiles.get(abscissa).get(ordinate);
         return isRow(abscissa, ordinate) || isColumn(abscissa, ordinate) ||
                 isCrossLeft(abscissa, ordinate) || isCrossRight(abscissa, ordinate);
     }
     
     private void initCaroTile() {
         tiles = new ArrayList();
-        caroPanel.setLayout(new GridLayout(16,16));
+        caroPanel.setLayout(new GridLayout(AREA,AREA));
         for(int i = 0; i < AREA; i++){
             ArrayList<CaroTile> row =  new ArrayList();
             for(int j = 0; j<AREA; j++){

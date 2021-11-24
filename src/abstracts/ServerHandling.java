@@ -15,7 +15,7 @@ import java.net.Socket;
     * This class handles the receive and send data between the client and server. 
     * Using on server side.
 */
-public abstract class ServerHandling {
+public class ServerHandling {
     protected ServerSocket server; //The server need to handling
     protected ObjectInputStream input; //The input reader
     protected ObjectOutputStream output; //The input writer

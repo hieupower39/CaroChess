@@ -15,8 +15,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -120,7 +118,7 @@ public class Server {
             try {
                 String strRes = "OK";
                 DatagramPacket dpRes = new DatagramPacket(strRes.getBytes(), strRes.length(), packet.getAddress(), packet.getPort());
-                udp.send(packet);
+                udp.send(dpRes);
             } catch (IOException ex) {
             }
         }
@@ -133,7 +131,7 @@ public class Server {
                 if(packet!=dpReq){
                     String strRes = "OK";
                     DatagramPacket dpRes = new DatagramPacket(strRes.getBytes(), strRes.length(), packet.getAddress(), packet.getPort());
-                    udp.send(packet);
+                    udp.send(dpRes);
                 }
             }
         } catch (IOException ex) {   

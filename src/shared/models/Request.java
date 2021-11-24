@@ -33,7 +33,7 @@ public class Request implements Serializable{
         this.request = request;
         this.data = data;
     }
-    
+
     //Get method   
 
     public int getRequest() {

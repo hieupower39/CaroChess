@@ -58,7 +58,11 @@ public class ClientRoomHandling extends ClientHandling{
                 + "<id>"+roomID+"</id></join>";
         this.sendRequest(new Request(Request.JOIN, data));
         System.out.println("waiting");
-        return (Room) this.receiveResult();
+        Object object = this.receiveResult();
+        if(!(object instanceof Room)){
+            throw (Exception) object;
+        }
+        return (Room) object;
     }
     
     //The roomClose method help close a room you have hosted by send to the server a CLOSEROOM request.

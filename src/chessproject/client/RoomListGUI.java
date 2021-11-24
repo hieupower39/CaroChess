@@ -162,22 +162,7 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
     //Action event handling
     private void hostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hostButtonActionPerformed
         //When user click on Host button.
-        try {
-            /*
-                First take the name on the name text field.
-                Then, find the open port for host room.
-                The roomHandling will handle the room hosting on the server.
-                Finally, open new room window to wait for another player to join and disble this window.
-             */
-            String name = nickNametxt.getText();
-            int port = ServerInformation.getClientPort();
-            roomHandling.roomHost(name, port);
-            WaitRoomGUI waitRoom = new WaitRoomGUI(this, name, port);
-            waitRoom.setName1(nickNametxt.getText());
-            waitRoom.setVisible(true);
-            this.setVisible(false);
-        } catch (IOException ex) {
-        }
+        new RoomConfigGUI(this).setVisible(true);
     }//GEN-LAST:event_hostButtonActionPerformed
 
     private void joinButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinButtonActionPerformed
@@ -207,6 +192,7 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
         } catch (FullRoomException ex) {
             //If the FullRoomException is caught that mean the room you want to join is full now.
             JOptionPane.showMessageDialog(rootPane, "Phòng đầy");
+            //ex.printStackTrace();
         } catch (NotFoundRoomException ex) {
             //If the NotfoundRoomException is caught that mean the room you want to join is closed or not available.
             JOptionPane.showMessageDialog(rootPane, "Phòng không tồn tại");
@@ -295,6 +281,22 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
                 modelRoomTable.addRow(row);
             }
         }
+    }
+    
+    public void hostRoom() throws IOException{
+        /*
+                First take the name on the name text field.
+                Then, find the open port for host room.
+                The roomHandling will handle the room hosting on the server.
+                Finally, open new room window to wait for another player to join and disble this window.
+        */
+        String name = nickNametxt.getText();
+        int port = ServerInformation.getClientPort();
+        roomHandling.roomHost(name, port);
+        WaitRoomGUI waitRoom = new WaitRoomGUI(this, name, port);
+        waitRoom.setName1(nickNametxt.getText());
+        waitRoom.setVisible(true);
+        this.setVisible(false);
     }
 
     //Public method
