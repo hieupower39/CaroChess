@@ -66,11 +66,11 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
 
             },
             new String [] {
-                "Số phòng", "Chủ phòng", "Ghi chú", "Trạng thái"
+                "Số phòng", "Chủ phòng", "Trạng thái", "Kích cỡ", "Chế độ", "Đi lại", "Ghi chú"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -109,7 +109,7 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
 
         jLabel1.setText("Tên:");
 
-        nickNametxt.setText("Player");
+        nickNametxt.setText("Người chơi");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,7 +184,7 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
 
             Room room = roomHandling.roomJoin(name, Integer.parseInt(roomID));
 
-            WaitRoomGUI waitRoom = new WaitRoomGUI(this, room.getHost().getAddress(), name, room.getPort());
+            WaitRoomGUI waitRoom = new WaitRoomGUI(this, room.getHost().getAddress(), name, room.getPort(), room);
             waitRoom.setName1(room.getHost().getName());
             waitRoom.setName2(nickNametxt.getText());
             waitRoom.setVisible(true);
@@ -277,26 +277,31 @@ public class RoomListGUI extends javax.swing.JFrame implements WindowListener {
         modelRoomTable.setRowCount(0);
         if (rooms.size() > 0) {
             for (RoomInformations room : rooms) {
-                Object[] row = {room.getRoomID(), room.getHost(), "Nothing", room.getStatus()};
+                Object[] row = {room.getRoomID(), room.getHost(), room.getStatus(), room.getSize(),
+                    room.getMode(), room.getUndo(), room.getNote()};
                 modelRoomTable.addRow(row);
             }
         }
     }
     
-    public void hostRoom() throws IOException{
-        /*
-                First take the name on the name text field.
-                Then, find the open port for host room.
-                The roomHandling will handle the room hosting on the server.
-                Finally, open new room window to wait for another player to join and disble this window.
-        */
-        String name = nickNametxt.getText();
-        int port = ServerInformation.getClientPort();
-        roomHandling.roomHost(name, port);
-        WaitRoomGUI waitRoom = new WaitRoomGUI(this, name, port);
-        waitRoom.setName1(nickNametxt.getText());
-        waitRoom.setVisible(true);
-        this.setVisible(false);
+    public void hostRoom(int size, int mode, boolean isUndo, String note) throws IOException{
+        try {
+            /*
+            First take the name on the name text field.
+            Then, find the open port for host room.
+            The roomHandling will handle the room hosting on the server.
+            Finally, open new room window to wait for another player to join and disble this window.
+            */
+            String name = nickNametxt.getText();
+            int port = ServerInformation.getClientPort();
+            Room room = roomHandling.roomHost(name, port, size, mode, isUndo, note);
+            WaitRoomGUI waitRoom = new WaitRoomGUI(this, name, port, room);
+            waitRoom.setName1(nickNametxt.getText());
+            waitRoom.setVisible(true);
+            this.setVisible(false);
+        } catch (ClassNotFoundException ex) {
+            
+        }
     }
 
     //Public method

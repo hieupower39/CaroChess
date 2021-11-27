@@ -5,8 +5,6 @@
 package chessproject.client;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -69,7 +67,7 @@ public class RoomConfigGUI extends javax.swing.JFrame {
 
         jLabel4.setText("Giới hạn thời gian:");
 
-        timeLimitChosen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mặc định (10 phút/người)", "Chậm (20 phút/ người)", "Chớp nhoáng (5 phút/ người)" }));
+        timeLimitChosen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mặc định (10 phút/người)", "Chậm (20 phút/ người)", "Chớp nhoáng (10 giây/ người)" }));
         timeLimitChosen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 timeLimitChosenActionPerformed(evt);
@@ -150,8 +148,6 @@ public class RoomConfigGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        backButton.getAccessibleContext().setAccessibleName("Quay lại");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -170,7 +166,20 @@ public class RoomConfigGUI extends javax.swing.JFrame {
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         try {
             // TODO add your handling code here:
-            this.parent.hostRoom();
+            int size = 10;
+            if(gameSizeTxt.getText().length()>0){
+                size = Integer.parseInt(gameSizeTxt.getText());
+            }
+            if(size<10){
+                size = 10;
+            }
+            if(size>40){
+                size = 40;
+            }
+            this.parent.hostRoom(size, 
+                    timeLimitChosen.getSelectedIndex(), 
+                    undoCheck.isSelected(),
+                    noteTxt.getText());
             this.dispose();
         } catch (IOException ex) {
             ex.printStackTrace();

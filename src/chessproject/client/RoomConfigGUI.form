@@ -111,9 +111,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Quay l&#x1ea1;i"/>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Quay l&#x1ea1;i"/>
-      </AccessibilityProperties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backButtonActionPerformed"/>
       </Events>
@@ -141,7 +138,7 @@
           <StringArray count="3">
             <StringItem index="0" value="M&#x1eb7;c &#x111;&#x1ecb;nh (10 ph&#xfa;t/ng&#x1b0;&#x1edd;i)"/>
             <StringItem index="1" value="Ch&#x1ead;m (20 ph&#xfa;t/ ng&#x1b0;&#x1edd;i)"/>
-            <StringItem index="2" value="Ch&#x1edb;p nho&#xe1;ng (5 ph&#xfa;t/ ng&#x1b0;&#x1edd;i)"/>
+            <StringItem index="2" value="Ch&#x1edb;p nho&#xe1;ng (10 gi&#xe2;y/ ng&#x1b0;&#x1edd;i)"/>
           </StringArray>
         </Property>
       </Properties>

@@ -16,8 +16,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -45,8 +43,13 @@ public class ServerRoomHandling extends ServerHandling{
         //System.out.println(data);
         host = new Room(new Person(Convertor.getValueFromXMLTag(data, "name"),
                 Convertor.getValueFromXMLTag(data, "address")), 
-                Integer.parseInt(Convertor.getValueFromXMLTag(data, "port"))); //Create a new room
+                Integer.parseInt(Convertor.getValueFromXMLTag(data, "port")),
+                Integer.parseInt(Convertor.getValueFromXMLTag(data, "size")),
+                Integer.parseInt(Convertor.getValueFromXMLTag(data, "mode")),
+                Boolean.parseBoolean(Convertor.getValueFromXMLTag(data, "undo")),
+                Convertor.getValueFromXMLTag(data, "note")); //Create a new room
         rooms.put(host.getRoomID(), host);//Store that room to the listRoom
+        this.sendData(host);
     }
     
     /*

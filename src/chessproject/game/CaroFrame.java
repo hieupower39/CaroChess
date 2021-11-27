@@ -6,6 +6,7 @@
 package chessproject.game;
 
 import chessproject.client.WaitRoomGUI;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,14 +29,21 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
      */
     private static final String SECOND_MOVE = "art/tickO.png";
     private static final String FIRST_MOVE = "art/tickX.png";
+    private ArrayList<CaroTile> myMove;
+    private ArrayList<CaroTile> opponentMove;
     private boolean isTurn;    
-    private static final int AREA = 16;
     private WaitRoomGUI parent;
     private ArrayList<ArrayList<CaroTile>> tiles;
     private String myTick, opponentTick;
-    public CaroFrame(WaitRoomGUI parent,boolean isTurn) {
+    private int size;
+    private boolean isUndo;
+    private boolean waitUndo;
+    private ClockPanel myClock, opponentClock;
+    
+    public CaroFrame(WaitRoomGUI parent, boolean isTurn, int size, boolean undoMode, int mode) {
         initComponents();
-        initCaroTile();
+        initCaroTile(size);
+        initClock(mode);
         this.addWindowListener(this);
         this.parent = parent;
         this.isTurn = isTurn;
@@ -45,12 +55,25 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
             this.myTick = SECOND_MOVE;
             this.opponentTick = FIRST_MOVE;
         } 
-            
+        this.size = size;
+        isUndo = false;   
+        waitUndo = false;
+        myMove = new ArrayList();
+        opponentMove = new ArrayList();
+        if(!undoMode){
+            this.remove(undoButton);
+        }
+        if(isTurn){
+            myClock.start();
+        }
+        else{
+            opponentClock.start();
+        }
     }
     
     public CaroFrame() {
         initComponents();
-        initCaroTile();
+        initCaroTile(40);
     }
 
     /**
@@ -63,12 +86,48 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
     private void initComponents() {
 
         caroPanel = new javax.swing.JPanel();
+        undoButton = new javax.swing.JButton();
+        myTimer = new javax.swing.JPanel();
+        opponentTimer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         caroPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         caroPanel.setPreferredSize(new java.awt.Dimension(400, 400));
-        caroPanel.setLayout(new java.awt.GridLayout());
+        caroPanel.setLayout(new java.awt.GridLayout(1, 0));
+
+        undoButton.setText("Xin đi lại");
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoButtonActionPerformed(evt);
+            }
+        });
+
+        myTimer.setPreferredSize(new java.awt.Dimension(175, 120));
+
+        javax.swing.GroupLayout myTimerLayout = new javax.swing.GroupLayout(myTimer);
+        myTimer.setLayout(myTimerLayout);
+        myTimerLayout.setHorizontalGroup(
+            myTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 175, Short.MAX_VALUE)
+        );
+        myTimerLayout.setVerticalGroup(
+            myTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 120, Short.MAX_VALUE)
+        );
+
+        opponentTimer.setPreferredSize(new java.awt.Dimension(175, 120));
+
+        javax.swing.GroupLayout opponentTimerLayout = new javax.swing.GroupLayout(opponentTimer);
+        opponentTimer.setLayout(opponentTimerLayout);
+        opponentTimerLayout.setHorizontalGroup(
+            opponentTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 175, Short.MAX_VALUE)
+        );
+        opponentTimerLayout.setVerticalGroup(
+            opponentTimerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 120, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,18 +136,53 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(caroPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(218, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(undoButton)
+                        .addGap(53, 53, 53))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(myTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(opponentTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(caroPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(myTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(opponentTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(undoButton))
+                    .addComponent(caroPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
+        // TODO add your handling code here:
+        if(isUndo){
+            try {
+                stopTime();
+                parent.requestUndo();
+                isUndo = false;
+                waitUndo = true;
+                
+            } catch (IOException ex) {
+                Logger.getLogger(CaroFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Bạn không thể đi lại");
+        }
+    }//GEN-LAST:event_undoButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,6 +221,9 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel caroPanel;
+    private javax.swing.JPanel myTimer;
+    private javax.swing.JPanel opponentTimer;
+    private javax.swing.JButton undoButton;
     // End of variables declaration//GEN-END:variables
     
     private void movePlay(CaroTile tile) throws IOException{
@@ -134,15 +231,22 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
             JOptionPane.showMessageDialog(this, "Đợi đối thủ đánh");
             return;
         }
+        if(waitUndo){
+            return;
+        }
         boolean isTick = tile.tick(myTick, true);
         this.setVisible(true);
         if(!isTick){
             try {
-                parent.moveCheck(tile.getAbscissa(), tile.getOrdinate());
+                myClock.stop();
+                parent.moveCheck(tile.getAbscissa(), tile.getOrdinate(), myClock.getTime());
                 isTurn = false;
+                isUndo = true;
+                this.myMove.add(tile);
                 if(isWin(tile.getAbscissa(), tile.getOrdinate())){
                     parent.gameOver(true);
                 }
+                opponentClock.start();
             } catch (IOException ex) {
          
             }
@@ -150,9 +254,14 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         
     }
     
-    public void play(int abscissa, int ordinate) throws IOException{
-        tiles.get(abscissa).get(ordinate).tick(opponentTick, false);       
+    public void play(int abscissa, int ordinate, int time) throws IOException{
+        this.opponentClock.stop();
+        CaroTile tile = tiles.get(abscissa).get(ordinate);     
+        tile.tick(opponentTick, false);
+        this.opponentMove.add(tile);
+        this.opponentClock.setTime(time);
         isTurn = true;
+        myClock.start();
         this.setVisible(true);
     }
     
@@ -160,13 +269,68 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         return isRow(abscissa, ordinate) || isColumn(abscissa, ordinate) ||
                 isCrossLeft(abscissa, ordinate) || isCrossRight(abscissa, ordinate);
     }
+
+    public boolean isWaitUndo() {
+        return waitUndo;
+    }
+
+    public void setWaitUndo(boolean waitUndo) {
+        this.waitUndo = waitUndo;
+    }
     
-    private void initCaroTile() {
+    public void undoLastMove(boolean isMy) {
+        if(isMy && myMove.size()>0){ 
+            if(myTick.equals(FIRST_MOVE)){
+                if(myMove.size()==opponentMove.size()){
+                    undoOpponent();
+                }
+            }
+            else{
+                if(myMove.size()<opponentMove.size())
+                    undoOpponent();
+            }
+            undoMy();
+            isTurn = true;
+        }
+        else if(!isMy && opponentMove.size()>0){
+           if(opponentTick.equals(FIRST_MOVE)){
+               if(myMove.size()==opponentMove.size()){
+                   undoMy();
+               }
+           }
+           else{
+               if(myMove.size()>opponentMove.size())
+                    undoMy();
+           }
+           undoOpponent(); 
+           isTurn = false;
+        }
+        this.setVisible(true);
+        JOptionPane.showMessageDialog(this, "Nước cờ đã được đi lại");
+
+    }
+    
+    private void undoMy(){
+        CaroTile myTile = myMove.get(myMove.size()-1);
+        myMove.remove(myTile);
+        myTile = tiles.get(myTile.getAbscissa()).get(myTile.getOrdinate());
+        myTile.unTick();
+    }
+    
+    private void undoOpponent(){
+        CaroTile opponentTile = opponentMove.get(opponentMove.size()-1);
+        opponentMove.remove(opponentTile);
+        opponentTile = tiles.get(opponentTile.getAbscissa()).get(opponentTile.getOrdinate());
+        opponentTile.unTick();
+    }
+    
+    private void initCaroTile(int size) {
         tiles = new ArrayList();
-        caroPanel.setLayout(new GridLayout(AREA,AREA));
-        for(int i = 0; i < AREA; i++){
+        caroPanel.setPreferredSize(new Dimension(size*25, size*25));
+        caroPanel.setLayout(new GridLayout(size,size));
+        for(int i = 0; i < size; i++){
             ArrayList<CaroTile> row =  new ArrayList();
-            for(int j = 0; j<AREA; j++){
+            for(int j = 0; j<size; j++){
                 final CaroTile tile = new CaroTile(i, j);
                 row.add(tile);
                 tile.addMouseListener(new MouseListener() {
@@ -248,15 +412,15 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         while (tmp>0){
             tmp--;
             if(!tiles.get(tmp).get(ordinate).isMy()){
-                
                 break;
             }
             count++;
         }
         //right stack
         tmp = abscissa;
-        while(tmp<15){
-            tmp++;
+        
+        while(tmp<size-1){
+            tmp+=1;
             if(!tiles.get(tmp).get(ordinate).isMy()){
                 break;
             }
@@ -279,7 +443,7 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         }
         //right stack
         tmp = ordinate;
-        while(tmp<15){
+        while(tmp<size-1){
             tmp++;
             if(!tiles.get(abscissa).get(tmp).isMy()){
                 break;
@@ -293,7 +457,7 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         int count = 0;
         int x = abscissa;
         int y = ordinate;
-        while(x>0&&y<15){
+        while(x>0&&y<size-1){
             x--;
             y++;
             if(!tiles.get(x).get(y).isMy()){
@@ -303,7 +467,7 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         }
         x = abscissa;
         y = ordinate;
-        while(y>0&&x<15){
+        while(y>0&&x<size-1){
             x++;
             y--;
             if(!tiles.get(x).get(y).isMy()){
@@ -328,7 +492,7 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         }
         x = abscissa;
         y = ordinate;
-        while(y<15&&x<15){
+        while(y<size-1&&x<size-1){
             x++;
             y++;
             if(!tiles.get(x).get(y).isMy()){
@@ -338,4 +502,40 @@ public class CaroFrame extends javax.swing.JFrame implements WindowListener{
         }
         return count >= 4;
     }
+
+    private int gameMode(int mode){
+        if(mode==1) return 1200;
+        if(mode==2) return 10;
+        return 600;
+    }
+
+    private void initClock(int mode) {
+        myClock = new ClockPanel(gameMode(mode), "Tôi", this, true);
+        opponentClock = new ClockPanel(gameMode(mode), "Đối thủ", this, false);
+        myClock.setBounds(0, 0, 175, 120);
+        opponentClock.setBounds(0, 0, 175, 120);
+        myTimer.add(myClock);
+        opponentTimer.add(opponentClock);
+    }
+
+    public void stopTime() {
+        myClock.stop();
+        opponentClock.stop();
+    }
+
+    void outTime() throws IOException{
+        parent.outTime();
+        this.stopTime();
+        
+    }
+
+    public void startTime() {
+        if(isTurn){
+            myClock.start();
+        }
+        else{
+            opponentClock.start();
+        }
+    }
+  
 }

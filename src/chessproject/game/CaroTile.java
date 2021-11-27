@@ -54,6 +54,11 @@ public class CaroTile extends javax.swing.JPanel {
         return true;
     }
     
+    public void unTick(){
+        tickLabel.setIcon(null);
+        isTick = false;
+        isMy = false;
+    }
     
     
     /**
@@ -77,4 +82,5 @@ public class CaroTile extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel tickLabel;
     // End of variables declaration//GEN-END:variables
+
 }

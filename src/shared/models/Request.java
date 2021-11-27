@@ -24,6 +24,9 @@ public class Request implements Serializable{
     public final static int STARTGAME = 1007;
     public final static int MOVE = 1008;
     public final static int YOULOST = 1009;
+    public final static int UNDOREQ = 1010;
+    public final static int UNDORES = 1011;
+    public final static int OUTTIME = 1012;
     //Constructor method
     public Request(int request) {
         this.request = request;

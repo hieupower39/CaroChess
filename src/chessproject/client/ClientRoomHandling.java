@@ -38,15 +38,20 @@ public class ClientRoomHandling extends ClientHandling{
     }
     
     //The roomHost method help send request to host a room.
-    public void roomHost(String name, int port) throws IOException {
+    public Room roomHost(String name, int port, int size, int mode, boolean isUndo, String note) throws IOException, ClassNotFoundException {
         String data = "<room>"
                 + "<person>"
                 + "<name>"+name+"</name>"
                 + "<address>"+this.socket.getInetAddress().getHostAddress()+"</address>"
                 + "</person>"
                 + "<port>"+port+"</port>"
+                + "<size>" + size + "</size>"
+                + "<mode>" + mode + "</mode>"
+                + "<undo>" + isUndo + "</undo>"
+                + "<note>" + note + "</note>"
                 + "</room>";
         this.sendRequest(new Request(Request.HOST, data));
+        return (Room) this.receiveResult();
     }
     
     //The roomJoin method help join a room you want if it available and return the room you just joined.

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import shared.models.Room;
 import shared.statics.Convertor;
 /**
  *
@@ -28,23 +29,26 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
     private ClientJoinHandling join; //The handling if you are client.
     private ClientHostHandling host; //The handling if you are host.
     private CaroFrame game;
+    private final Room room;
     
     /**
      * Creates new form WaitRoomGUI
      */
     
-    public WaitRoomGUI(RoomListGUI parent, String name, int port) throws IOException {
+    public WaitRoomGUI(RoomListGUI parent, String name, int port, Room room) throws IOException {
         //Start a host room
         this.parent=parent;
         initHostRoom(port);
+        this.room = room;
         initComponents();
         this.addWindowListener(this);
     }
     
-    public WaitRoomGUI(RoomListGUI parent, String host, String name, int port) throws IOException{
+    public WaitRoomGUI(RoomListGUI parent, String host, String name, int port, Room room) throws IOException{
         //Join a room
         this.parent=parent;
         initJoinRoom(host, name, port);
+        this.room = room;
         initComponents();
         this.addWindowListener(this);
         this.remove(startButton);
@@ -64,16 +68,13 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
         player2Name = new javax.swing.JFormattedTextField();
         startButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        player1Name.setText("Player 1");
+        player1Name.setText("Người chơi 1");
 
         player2Name.setText("Player 2");
         player2Name.addActionListener(new java.awt.event.ActionListener() {
@@ -96,17 +97,6 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
             }
         });
 
-        jButton4.setText("Sẵn sàng");
-
-        jButton5.setText("Khán giả");
-
-        jButton6.setText("X");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Số phòng: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -122,20 +112,11 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
                         .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
                             .addComponent(player1Name, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(player2Name, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton4)))))
-                        .addGap(0, 186, Short.MAX_VALUE)))
+                            .addComponent(player2Name, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 204, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -143,17 +124,11 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(21, 21, 21)
+                .addGap(18, 18, 18)
                 .addComponent(player1Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(player2Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4))
-                .addGap(24, 24, 24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(player2Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(exitButton)
                     .addComponent(startButton))
@@ -178,10 +153,6 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
     private void player2NameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_player2NameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_player2NameActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         //When user click on Exit button
@@ -227,25 +198,21 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
         Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
                         while(true){
-                            host = new ClientHostHandling(server, server.accept());
-                            //Take and display the player 2 name from the client first.
-                            Request request = (Request) host.receiveData(); 
-                            if(request.getRequest() == Request.SETNAME){
-                                player2Name.setText(request.getData()); 
-                            }
-                            setVisible(true);
-                            while(!host.getIsOut()){
-                                requestHandling(host); //Wait and handle all client's requests.
+                            try {
+                                host = new ClientHostHandling(server, server.accept());
+                                //Take and display the player 2 name from the client first.
+                                Request request = (Request) host.receiveData();
+                                if(request.getRequest() == Request.SETNAME){
+                                    player2Name.setText(request.getData());
+                                }
+                                setVisible(true);
+                                while(!host.getIsOut()){
+                                    requestHandling(host); //Wait and handle all client's requests.
+                                }
+                            } catch (IOException | ClassNotFoundException | ParserConfigurationException | SAXException ex) {
                             }
                         }
-                    } catch (IOException | ClassNotFoundException ex) {   
-                    } catch (ParserConfigurationException ex) {
-                        Logger.getLogger(WaitRoomGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SAXException ex) {
-                        Logger.getLogger(WaitRoomGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
             });
         thread.start();
@@ -267,9 +234,7 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
                     while(true){
                         requestHandling(join);
                     }
-                } catch (IOException | ClassNotFoundException e) {    
-                } catch (ParserConfigurationException | SAXException ex) {
-                    Logger.getLogger(WaitRoomGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException | ClassNotFoundException | ParserConfigurationException | SAXException e) {
                 }
             } 
         });
@@ -283,23 +248,51 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
         switch(request.getRequest()){
             case Request.EXIT:
                 //If request is EXIT remove name of that client and wait for a new connection.
-                player2Name.setText("Player 2");
+                player2Name.setText("Chờ người chơi ...");
                 if(game!=null){
                     game.dispose();
                     game = null;
                 }
                 setVisible(true);
                 host.setIsOut(true);
+                break;
             case Request.MOVE:
                 String abscissa = Convertor.getValueFromXMLTag(request.getData(), "abscissa");
                 String ordinate = Convertor.getValueFromXMLTag(request.getData(), "ordinate");
-                moveExcute(Integer.parseInt(abscissa), Integer.parseInt(ordinate));
+                String time = Convertor.getValueFromXMLTag(request.getData(), "time");
+                moveExcute(Integer.parseInt(abscissa), Integer.parseInt(ordinate), Integer.parseInt(time));
                 break;
-            case Request.YOULOST:
-                JOptionPane.showMessageDialog(this, "You lost");
+            case Request.YOULOST:                
+                game.stopTime();                 
+                JOptionPane.showMessageDialog(this, "Bạn đã thua");
                 gameOver(false);
                 break;
-            
+            case Request.UNDOREQ:
+                game.stopTime();
+                game.setWaitUndo(true);
+                int result = JOptionPane.showConfirmDialog(this, "Đối thủ muốn đi lại");
+                if(result == JOptionPane.YES_OPTION){
+                    game.undoLastMove(false);                  
+                }
+                host.sendData(new Request(Request.UNDORES, result+""));
+                game.setWaitUndo(false);
+                game.startTime();
+                break;
+            case Request.UNDORES:
+                game.setWaitUndo(false);
+                if(Integer.parseInt(request.getData())==JOptionPane.YES_OPTION){
+                    game.undoLastMove(true);
+                }
+                else{
+                    
+                    JOptionPane.showMessageDialog(game, "Đối thủ không chấp nhận đi lại");
+                }
+                game.startTime();  
+                break;
+            case Request.OUTTIME:
+                //game.stopTime();
+                gameOver(true);
+                break;
          }
      }
      
@@ -328,26 +321,52 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
             case Request.MOVE:
                 String abscissa = Convertor.getValueFromXMLTag(request.getData(), "abscissa");
                 String ordinate = Convertor.getValueFromXMLTag(request.getData(), "ordinate");
-                moveExcute(Integer.parseInt(abscissa), Integer.parseInt(ordinate));
+                String time = Convertor.getValueFromXMLTag(request.getData(), "time");
+                moveExcute(Integer.parseInt(abscissa), Integer.parseInt(ordinate), Integer.parseInt(time));
                 break;
             case Request.YOULOST:
-                JOptionPane.showMessageDialog(this, "You lost");
+                game.stopTime(); 
+                JOptionPane.showMessageDialog(this, "Bạn đã thua");
                 gameOver(false);
                 break;
-                
+            case Request.UNDOREQ:
+                game.stopTime();
+                game.setWaitUndo(true);
+                int result = JOptionPane.showConfirmDialog(game, "Đối thủ muốn đi lại");
+                if(result == JOptionPane.YES_OPTION){
+                    game.undoLastMove(false);
+                }
+                join.sendRequest(new Request(Request.UNDORES, result+""));
+                game.setWaitUndo(false);
+                game.startTime();
+                break;
+            case Request.UNDORES:
+                game.setWaitUndo(false);
+                if(Integer.parseInt(request.getData())==JOptionPane.YES_OPTION){
+                    game.undoLastMove(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(game, "Đối thủ không chấp nhận đi lại");
+                }
+                game.startTime();   
+                break;
+            case Request.OUTTIME:
+                gameOver(true);
+                break;
          }
      }
      
      private void startGame(boolean isTurn){
-        game = new CaroFrame(this, isTurn);
+        game = new CaroFrame(this, isTurn, room.getSize(), room.isIsUndo(), room.getMode());
         game.setVisible(true);
         this.setVisible(false);
      }
      
-     public void moveCheck(int abscissa, int ordinate) throws IOException{
+     public void moveCheck(int abscissa, int ordinate, int time) throws IOException{
          String xmlData = "<coordinate>"
                  +"<abscissa>"+ abscissa + "</abscissa>"
                  +"<ordinate>"+ ordinate + "</ordinate>"
+                 + "<time>"+time+"</time>"
                  +"</coordinate>";
          Request request = new Request(Request.MOVE, xmlData);
          if(join != null){
@@ -358,9 +377,9 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
          }
      }
      
-     private void moveExcute(int abscissa, int ordinate) throws IOException {
+     private void moveExcute(int abscissa, int ordinate, int time) throws IOException {
         if(game!=null){
-            game.play(abscissa, ordinate);
+            game.play(abscissa, ordinate, time);
         }
     }
      
@@ -373,11 +392,31 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
             else{
                  host.sendData(request);
             }
-            JOptionPane.showMessageDialog(this, "You won");
+            JOptionPane.showMessageDialog(this, "Bạn đã thắng");
          }
-         
          game.dispose();
          this.setVisible(true);
+     }
+     
+     public void outTime() throws IOException{
+        Request request = new Request(Request.OUTTIME);
+        if(join != null){
+           join.sendRequest(request);
+        }
+        else{
+            host.sendData(request);
+        }
+     }
+     
+     public void requestUndo() throws IOException {
+         Request request = new Request(Request.UNDOREQ);
+         if(join != null){
+                join.sendRequest(request);
+            }
+         else{
+                 host.sendData(request);
+        }
+         JOptionPane.showMessageDialog(this, "Đợi đối thủ suy nghĩ ...");
      }
      
     //Override method of the WindowListener
@@ -391,8 +430,8 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
         }
         try {
             //Try to close the room if you are the hosting and close server
-            parent.close();
             server.close();
+            parent.closeRoom();
         } catch (Exception ex) {   
         } 
         try{
@@ -401,6 +440,8 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
             parent.exitRoom();
         } catch (Exception ex) {  
         }
+        parent.windowClosing(e);
+        
     }
     
     @Override
@@ -430,14 +471,13 @@ public class WaitRoomGUI extends javax.swing.JFrame implements WindowListener{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JFormattedTextField player1Name;
     private javax.swing.JFormattedTextField player2Name;
     private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
+
+    
 
     
 }

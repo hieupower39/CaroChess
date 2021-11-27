@@ -16,13 +16,25 @@ public class Room implements Serializable{
     private boolean status; //The status of the room (true is available, false is full).
     private int port; //The port that player want to host the room.
     private int roomID; //A number for identification the room.
+    private int size;
+    private int mode;
+    private String note;
+    private boolean isUndo;
     private static int id = 100; //Some static to increment.
+   
 
     //Constructor method
-    public Room(Person host, int port) {
+    public Room(Person host, int port, int size, int mode, boolean isUndo, String note) {
         this.host = host;
         this.status = true;
         this.port = port;
+        this.size = size;
+        this.mode = mode;
+        this.isUndo = isUndo;
+        if(note.length()>0)
+            this.note = note;
+        else
+            this.note = "Không";
         this.roomID=id++;
     }
     
@@ -63,12 +75,56 @@ public class Room implements Serializable{
         return status;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public boolean isIsUndo() {
+        return isUndo;
+    }
+    
+    public static String getMode(int mode){
+        if(mode == 1){
+            return "Nhanh";
+        }
+        if(mode == 2){
+            return "Chớp nhoáng";
+        }
+        return "Mặc định";
+    }
+    
+    public static String getUndo(boolean isUndo){
+        if(isUndo){
+            return "Cho phép đi lại";
+        }
+        return "Không đi lại";
+    }
+    
+    public static String getStatus(boolean isStatus){
+        if(isStatus){
+            return "Có thể vào";
+        }
+        return "Phòng đầy";
+    }
+    
     @Override
     public String toString() {
         return "<room>"
                 + "<id>"+roomID+"</id>"
                 + "<host>"+host.getName()+"</host>"
-                + "<status>" + status +"</status>"
+                + "<status>" + getStatus(status) +"</status>"
+                + "<size>" + size + "</size>"
+                + "<mode>" + getMode(mode) + "</mode>"
+                + "<note>" + note + "</note>"
+                + "<undo>" + getUndo(isUndo) +"</undo>"
                 + "</room>";
     }
     

@@ -19,11 +19,19 @@ public class RoomInformations implements Serializable{
     private final String roomID;
     private final String host;
     private final String status;
+    private final String size;
+    private final String mode;
+    private final String undo;
+    private final String note;
 
     public RoomInformations(String xmlData) throws ParserConfigurationException, SAXException, IOException {
         this.roomID = Convertor.getValueFromXMLTag(xmlData, "id");
         this.host = Convertor.getValueFromXMLTag(xmlData, "host");
         this.status = Convertor.getValueFromXMLTag(xmlData, "status");
+        this.size = Convertor.getValueFromXMLTag(xmlData, "size");
+        this.mode = Convertor.getValueFromXMLTag(xmlData, "mode");
+        this.undo = Convertor.getValueFromXMLTag(xmlData, "undo");
+        this.note = Convertor.getValueFromXMLTag(xmlData, "note");
     }
 
     public String getRoomID() {
@@ -36,6 +44,22 @@ public class RoomInformations implements Serializable{
 
     public String getStatus() {
         return status;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public String getUndo() {
+        return undo;
+    }
+
+    public String getNote() {
+        return note;
     }
     
     

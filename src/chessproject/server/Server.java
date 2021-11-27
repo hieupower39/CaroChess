@@ -34,6 +34,7 @@ public class Server {
     public static void main(String[] args) throws IOException {
         server = new ServerSocket(ServerInformation.getServerPort());
         udp = new DatagramSocket(ServerInformation.getDatagramPort());
+        System.out.println("Server is running");
         while(true){
             //Server always listen and accept client each client server create a new thread to handle it
             createClientThread(server.accept());
@@ -85,6 +86,7 @@ public class Server {
         System.out.println(request.getRequest());
         switch(request.getRequest()){
             case Request.HOST: 
+                System.out.println(request.getData());
                 roomHandling.hostRoom(rooms, request.getData());
                 updateAll(dpReq);
                 break;
